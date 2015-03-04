@@ -52,6 +52,9 @@ public class Board extends JPanel implements Runnable, Commons {
     private SoundClip sndBombas = new SoundClip("disparosAlien.wav");
     private SoundClip sndInicio = new SoundClip("inicioJuego.wav");
     private SoundClip sndLose = new SoundClip("lose.WAV");
+    private SoundClip sndAlien = new SoundClip("muerteAlien.wav");
+    private SoundClip sndMuerte = new SoundClip("muerteShip.wav");
+    private SoundClip sndWin = new SoundClip("win.wav");
     private Thread animator;    // thread
 
     /**
@@ -250,6 +253,7 @@ public class Board extends JPanel implements Runnable, Commons {
      */
     public void gameOver()
     {
+        sndLose.play();
         // Dibuja el game over
         Graphics graGrafico = this.getGraphics();
 
@@ -286,6 +290,7 @@ public class Board extends JPanel implements Runnable, Commons {
         // si destruye todos los arlAliens, gana el juego
         if (iDeaths == NUMBER_OF_ALIENS_TO_DESTROY) {
             bIngame = false;
+            sndWin.play();
             sMessage = "Game won!";
         }
 
@@ -310,6 +315,7 @@ public class Board extends JPanel implements Runnable, Commons {
                             alien.setDying(true);   // destruye el alien
                             iDeaths++;  // aumenta las muertes de aliens
                             shtShot.die();  // destruye el disparo
+                            sndAlien.play();
                         }
                 }
             }
@@ -409,6 +415,7 @@ public class Board extends JPanel implements Runnable, Commons {
                             new ImageIcon(this.getClass().getResource(sExpl));
                         plyPlayer.setImage(imiImagen.getImage());
                         plyPlayer.setDying(true);   // destruye el jugador
+                        sndMuerte.play();
                         bmbBomba.setDestroyed(true);    // destruye la bomba
                     }
             }

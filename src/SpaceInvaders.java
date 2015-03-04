@@ -1,18 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+  * SpaceInvaders
+  *
+  * Juego SpaceInvaders en el cual el jugador debe dispararle a los aliens antes
+  * de que lleguen a la tierra.
+  *
+  * @author Fabián Montemayor A01280156 & Mauro Amarante A01191903
+  * @version 2.0 
+  * @date 4/03/15
+  */
 import javax.swing.JFrame;
 
-/**
- *
- * @author http://zetcode.com/
- */
+
 public class SpaceInvaders extends JFrame implements Commons {
 
-    /*
-    *
+    /**
+    * SpaceInvaders
+    * 
+    * Metodo constructor del juego.
     */
     public SpaceInvaders()
     {
@@ -25,8 +29,10 @@ public class SpaceInvaders extends JFrame implements Commons {
         setResizable(false);
     }
 
-    /*
-    *
+    /**
+    * main
+    * 
+    * Metodo de main.
     */
     public static void main(String[] args) {
         // crea una nueva instancia de SpaceInvaders
