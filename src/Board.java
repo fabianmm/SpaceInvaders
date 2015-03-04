@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -14,6 +15,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -50,6 +52,7 @@ public class Board extends JPanel implements Runnable, Commons {
 
     private boolean bIngame = true; // boleana de si esta jugando o no
     private boolean bPause = false; // boleana de pausar el juego
+    private boolean bInstr = false; // boleana de instrucciones
     private final String sExpl = "explosion.png";   // url de la imagen explosion
     private final String sAlienpix = "alien.png";   // url de la imagen de alien
     private String sMessage = "Game Over";  // mensage de game over
@@ -62,6 +65,7 @@ public class Board extends JPanel implements Runnable, Commons {
     private SoundClip sndAlien = new SoundClip("muerteAlien.wav");
     private SoundClip sndMuerte = new SoundClip("muerteShip.wav");
     private SoundClip sndWin = new SoundClip("win.wav");
+    private SoundClip sndInstr = new SoundClip("instruccionesCreditos.wav");
     
     private String sNombreArchivo = "juego.txt";    //Nombre del archivo.
     private String[] sArr;    //Arreglo del archivo divido.
@@ -102,7 +106,7 @@ public class Board extends JPanel implements Runnable, Commons {
     /**
       * gameInit
       * 
-      * Metodo que inicializa las variables.
+      * Metodo que inicializa el juego.
       * 
       */
     public void gameInit() {
@@ -240,13 +244,24 @@ public class Board extends JPanel implements Runnable, Commons {
       
       // si esta en el juego
       if (bIngame) {
-        // dibuja la linea de ground
-        graGrafico.drawLine(0, GROUND, BOARD_WIDTH, GROUND);
-        // dibuja cada sprite
-        drawAliens(graGrafico);
-        drawPlayer(graGrafico);
-        drawShot(graGrafico);
-        drawBombing(graGrafico);
+        if (!bInstr) {
+            sndInstr.stop();
+            // dibuja la linea de ground
+            graGrafico.drawLine(0, GROUND, BOARD_WIDTH, GROUND);
+            // dibuja cada sprite
+            drawAliens(graGrafico);
+            drawPlayer(graGrafico);
+            drawShot(graGrafico);
+            drawBombing(graGrafico);
+        }
+        else  {
+            // imagen de instrucciones
+            URL urlInstr = this.getClass().getResource("intrucciones.png");
+            Image imaInstr = Toolkit.getDefaultToolkit().getImage(urlInstr);
+            graGrafico.drawImage(imaInstr, 0, -20 , this);
+            sndInstr.play();
+        }
+        
       }
 
       Toolkit.getDefaultToolkit().sync();
@@ -454,7 +469,7 @@ public class Board extends JPanel implements Runnable, Commons {
             // pinta y actualiza
             repaint();
             
-            if (!bPause) { // checa si no esta pausado el juego
+            if (!bPause && !bInstr) { // checa si no esta pausado el juego
                 animationCycle();
             }
             
@@ -559,6 +574,9 @@ public class Board extends JPanel implements Runnable, Commons {
             else if (kveEvent.getKeyCode() == KeyEvent.VK_P) {
                 // pausa el jeugo
                 bPause = !bPause;
+            }
+            else if (kveEvent.getKeyCode() == KeyEvent.VK_I) {
+                bInstr = !bInstr;
             }
           }
         }
