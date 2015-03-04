@@ -1,18 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- *
- * @author http://zetcode.com/
- */
+  * Interface <code>Commons</code> que contiene todas las constantes del juego. 
+  * @author 
+  */
 public interface Commons {
 
-    public static final int BOARD_WIDTH = 358;
-    public static final int BOARD_HEIGTH = 350;
-    public static final int GROUND = 290;
+    public static final int BOARD_WIDTH = 700;
+    public static final int BOARD_HEIGTH = 600;
+    public static final int GROUND = 500;
     public static final int BOMB_HEIGHT = 5;
     public static final int ALIEN_HEIGHT = 12;
     public static final int ALIEN_WIDTH = 12;
