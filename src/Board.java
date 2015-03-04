@@ -53,6 +53,8 @@ public class Board extends JPanel implements Runnable, Commons {
     private boolean bIngame = true; // boleana de si esta jugando o no
     private boolean bPause = false; // boleana de pausar el juego
     private boolean bInstr = false; // boleana de instrucciones
+    private boolean bCred = false;
+    
     private final String sExpl = "explosion.png";   // url de la imagen explosion
     private final String sAlienpix = "alien.png";   // url de la imagen de alien
     private String sMessage = "Game Over";  // mensage de game over
@@ -244,7 +246,20 @@ public class Board extends JPanel implements Runnable, Commons {
       
       // si esta en el juego
       if (bIngame) {
-        if (!bInstr) {
+        if (bInstr) {
+            // imagen de instrucciones
+            URL urlInstr = this.getClass().getResource("intrucciones.png");
+            Image imaInstr = Toolkit.getDefaultToolkit().getImage(urlInstr);
+            graGrafico.drawImage(imaInstr, 0, -20 , this);
+            sndInstr.play();
+        }
+        else if (bCred) {
+            //imagen creditos
+            URL urlCred = this.getClass().getResource("creditos.png");
+            Image imaCred = Toolkit.getDefaultToolkit().getImage(urlCred);
+            graGrafico.drawImage(imaCred, 0, -20 , this);
+        }
+        else  {
             sndInstr.stop();
             // dibuja la linea de ground
             graGrafico.drawLine(0, GROUND, BOARD_WIDTH, GROUND);
@@ -253,15 +268,14 @@ public class Board extends JPanel implements Runnable, Commons {
             drawPlayer(graGrafico);
             drawShot(graGrafico);
             drawBombing(graGrafico);
-        }
-        else  {
-            // imagen de instrucciones
-            URL urlInstr = this.getClass().getResource("intrucciones.png");
-            Image imaInstr = Toolkit.getDefaultToolkit().getImage(urlInstr);
-            graGrafico.drawImage(imaInstr, 0, -20 , this);
-            sndInstr.play();
+            
         }
         
+      }
+      else {
+        URL urlGameOver = this.getClass().getResource("gameOver.png");
+        Image imaGameOver = Toolkit.getDefaultToolkit().getImage(urlGameOver);
+        graGrafico.drawImage(imaGameOver, 0, 0 , this);
       }
 
       Toolkit.getDefaultToolkit().sync();
@@ -279,21 +293,10 @@ public class Board extends JPanel implements Runnable, Commons {
         // Dibuja el game over
         Graphics graGrafico = this.getGraphics();
 
-        graGrafico.setColor(Color.black);
-        graGrafico.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGTH);
-
-        graGrafico.setColor(new Color(0, 32, 48));
-        graGrafico.fillRect(50, BOARD_WIDTH/2 - 30, BOARD_WIDTH-100, 50);
-        graGrafico.setColor(Color.white);
-        graGrafico.drawRect(50, BOARD_WIDTH/2 - 30, BOARD_WIDTH-100, 50);
-
-        Font small = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metr = this.getFontMetrics(small);
-
-        graGrafico.setColor(Color.white);
-        graGrafico.setFont(small);
-        graGrafico.drawString(sMessage, (BOARD_WIDTH - metr.stringWidth(sMessage))/2, 
-            BOARD_WIDTH/2);
+        URL urlGameOver = this.getClass().getResource("gameOver.png");
+        Image imaGameOver = Toolkit.getDefaultToolkit().getImage(urlGameOver);
+        graGrafico.drawImage(imaGameOver, 0, 0 , this);
+        
     }
 
     /**
@@ -469,7 +472,7 @@ public class Board extends JPanel implements Runnable, Commons {
             // pinta y actualiza
             repaint();
             
-            if (!bPause && !bInstr) { // checa si no esta pausado el juego
+            if (!bPause && !bInstr && !bCred) { // checa si no esta pausado el juego
                 animationCycle();
             }
             
@@ -577,6 +580,16 @@ public class Board extends JPanel implements Runnable, Commons {
             }
             else if (kveEvent.getKeyCode() == KeyEvent.VK_I) {
                 bInstr = !bInstr;
+                if (bCred) {
+                    bCred = false;
+                }
+                sndInstr.play();
+            }
+            else if (kveEvent.getKeyCode() == KeyEvent.VK_R) {
+                bCred = !bCred;
+                if (bInstr) {
+                    bInstr = false;
+                }
             }
           }
         }
