@@ -1,4 +1,6 @@
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 
 /**
@@ -16,6 +18,7 @@ public class Alien extends Sprite {
 
     private Bomb bmbBomb; // bomba del alien, objeto del tipo Bomb
     private final String sShot = "alien.png";   // string con el url de la imagen
+    private Animacion aniAlien;   // Animacion para el alien
 
     /**
       * Alien
@@ -30,6 +33,16 @@ public class Alien extends Sprite {
         this.iY = iY;
         bmbBomb = new Bomb(iX, iY);
         ImageIcon imiImagen = new ImageIcon(this.getClass().getResource(sShot));
+        //Se cargan las imágenes(cuadros) para la animación de la portada
+        Image alien1 = Toolkit.getDefaultToolkit().getImage(this.getClass().
+                            getResource("alien.png"));
+        Image alien2 = Toolkit.getDefaultToolkit().getImage(this.getClass().
+                            getResource("alien2.png"));
+        //Se crea la animación de la portada
+        aniAlien = new Animacion();
+	aniAlien.sumaCuadro(alien1, 200);
+        aniAlien.sumaCuadro(alien2, 200);
+        setAnimacion(aniAlien);
         setImage(imiImagen.getImage());
     }
 

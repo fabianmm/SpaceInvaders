@@ -14,10 +14,11 @@ import javax.swing.ImageIcon;
  * @date 4/03/15
  */
 
-public class Sprite {
+public class Sprite extends Animacion{
 
         private boolean bVisible;   // boleana de visibilidad del sprite
         private Image imgImage; // imagen del sprite
+        private Animacion aniAnimacion;   // Animacion del sprite
         protected int iX;   // posicion x del sprite
         protected int iY;   // posicion y del sprite
         protected boolean bDying;   // boleana de muerte del sprite
@@ -86,6 +87,28 @@ public class Sprite {
           */
         public Image getImage() {
             return imgImage;
+        }
+        
+        /**
+          * setAnimacion
+          * 
+          * Metodo modificador usado para cambiar la animacion del sprite
+          * 
+          * @param aniAnimacion es la animacion a utilizar
+          * 
+          */
+        public void setAnimacion(Animacion aniAnimacion) {
+            this.aniAnimacion = aniAnimacion;
+        }
+
+        /**
+          * getAnimacion
+          * 
+          * Metodo de acceso que regresa la animacion del sprite
+          * 
+          */
+        public Animacion getAnimacion() {
+            return aniAnimacion;
         }
 
         /**

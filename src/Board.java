@@ -104,7 +104,7 @@ public class Board extends JPanel implements Runnable, Commons {
             Alien alien = (Alien) it.next();
 
             if (alien.isVisible()) {
-                g.drawImage(alien.getImage(), alien.getX(), alien.getY(), this);
+                g.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
             }
 
             if (alien.isDying()) {
