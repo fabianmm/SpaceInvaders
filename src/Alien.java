@@ -17,8 +17,8 @@ import javax.swing.ImageIcon;
 public class Alien extends Sprite {
 
     private Bomb bmbBomb; // bomba del alien, objeto del tipo Bomb
-    private final String sShot = "alien.png";   // string con el url de la imagen
     private Animacion aniAlien;   // Animacion para el alien
+    private Animacion aniAlienMuere;   // Animacion para el alien cuando muere
 
     /**
       * Alien
@@ -32,7 +32,6 @@ public class Alien extends Sprite {
         this.iX = iX;
         this.iY = iY;
         bmbBomb = new Bomb(iX, iY);
-        ImageIcon imiImagen = new ImageIcon(this.getClass().getResource(sShot));
         //Se cargan las imágenes(cuadros) para la animación de la portada
         Image alien1 = Toolkit.getDefaultToolkit().getImage(this.getClass().
                             getResource("alien.png"));
@@ -40,10 +39,9 @@ public class Alien extends Sprite {
                             getResource("alien2.png"));
         //Se crea la animación de la portada
         aniAlien = new Animacion();
-	aniAlien.sumaCuadro(alien1, 10);
-        aniAlien.sumaCuadro(alien2, 10);
+	aniAlien.sumaCuadro(alien1, 25);
+        aniAlien.sumaCuadro(alien2, 25);
         setAnimacion(aniAlien);
-        setImage(imiImagen.getImage());
     }
 
     /**
@@ -54,6 +52,25 @@ public class Alien extends Sprite {
      */
     public void act(int iDirection) {
         this.iX += iDirection;
+    }
+    
+    /**
+     * dieAnimacion
+     * 
+     * Metodo de actualización la animacion al morir
+     * 
+     */
+    public void dieAnimacion() {
+        //Se cargan las imágenes(cuadros) para la animación de la portada
+        Image alien1 = Toolkit.getDefaultToolkit().getImage(this.getClass().
+                            getResource("explosion.png"));
+        Image alien2 = Toolkit.getDefaultToolkit().getImage(this.getClass().
+                            getResource("explosion2.png"));
+        //Se crea la animación de la portada
+        aniAlienMuere = new Animacion();
+	aniAlienMuere.sumaCuadro(alien1, 25);
+        aniAlienMuere.sumaCuadro(alien2, 25);
+        setAnimacion(aniAlienMuere);
     }
 
     /**

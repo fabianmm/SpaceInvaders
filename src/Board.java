@@ -35,9 +35,11 @@ public class Board extends JPanel implements Runnable, Commons {
     private int iAlienY = 5; // posición y del alien
     private int iDirection = -1; // direccion del jugador
     private int iDeaths = 0;    // numero de arlAliens muertos
+    private int iDeathCounter = 13; //contador para dibujar animacion de muerte
     
     private long lTiempoActual; // tiempo actual
     private long lTiempoInicial;    // tiempo inicial
+    private long lTiempoTranscurrido;   //tiempo transcurrido
 
     private boolean bIngame = true; // boleana de si esta jugando o no
     private boolean bPause = false; // boleana de pausar el juego
@@ -93,7 +95,7 @@ public class Board extends JPanel implements Runnable, Commons {
         // crea cada alien (24)
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 6; j++) {
-                Alien alien = new Alien(iAlienX + 18 * j, iAlienY + 18 * i);
+                Alien alien = new Alien(iAlienX + 35 * j, iAlienY + 25 * i);
                 alien.setImage(imiImagen.getImage());
                 arlAliens.add(alien);
             }
@@ -120,13 +122,7 @@ public class Board extends JPanel implements Runnable, Commons {
       * @param graGrafico es el <code>objeto grafico</code> usado para dibujar.
       */
     public void drawAliens(Graphics graGrafico) 
-    {
-        //Determina el tiempo que ha transcurrido desde que el Applet inicio su ejecución
-        long lTiempoTranscurrido = System.currentTimeMillis() - lTiempoActual;
-            
-        //Guarda el tiempo actual
-       	lTiempoActual += lTiempoTranscurrido;
-         
+    {    
         Iterator it = arlAliens.iterator();
         
         // mientras existan aliens
@@ -140,8 +136,17 @@ public class Board extends JPanel implements Runnable, Commons {
             }
 
             // si el alien se muere
-            if (alien.isDying()) {
-                alien.die();
+            if (alien.isDying() && iDeathCounter > 0) {
+                alien.dieAnimacion();
+                alien.getAnimacion().actualiza(lTiempoTranscurrido);
+                graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
+                iDeathCounter--;
+                System.out.println(iDeathCounter);
+                //cuando el contador termine reiniciarlo
+                if (iDeathCounter < 0) {
+                    iDeathCounter = 13;
+                    alien.die();
+                }
             }
         }
     }
@@ -266,7 +271,12 @@ public class Board extends JPanel implements Runnable, Commons {
      * 
      */
     public void animationCycle()  {
-
+        //Determina el tiempo que ha transcurrido desde que el Applet inicio su ejecución
+        lTiempoTranscurrido = System.currentTimeMillis() - lTiempoActual;
+            
+        //Guarda el tiempo actual
+       	lTiempoActual += lTiempoTranscurrido;
+        
         // si destruye todos los arlAliens, gana el juego
         if (iDeaths == NUMBER_OF_ALIENS_TO_DESTROY) {
             bIngame = false;
