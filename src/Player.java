@@ -12,58 +12,58 @@ import javax.swing.ImageIcon;
  *
  * @author http://zetcode.com/
  */
-public class Player extends Sprite implements Commons{
+public class Player extends Sprite implements Commons {
 
-    private final int START_Y = 280; 
-    private final int START_X = 270;
+    private final int iSTART_Y = 280; 
+    private final int iSTART_X = 270;
 
-    private final String player = "player.png";
-    private int width;
+    private final String sPlayer = "player.png";
+    private int iWidth;
 
     public Player() {
 
-        ImageIcon ii = new ImageIcon(this.getClass().getResource(player));
+        ImageIcon imiImagen = new ImageIcon(this.getClass().getResource(sPlayer));
 
-        width = ii.getImage().getWidth(null); 
+        iWidth = imiImagen.getImage().getWidth(null); 
 
-        setImage(ii.getImage());
-        setX(START_X);
-        setY(START_Y);
+        setImage(imiImagen.getImage());
+        setX(iSTART_X);
+        setY(iSTART_Y);
     }
 
     public void act() {
-        x += dx;
-        if (x <= 2) 
-            x = 2;
-        if (x >= BOARD_WIDTH - 2*width) 
-            x = BOARD_WIDTH - 2*width;
+        iX += iDx;
+        if (iX <= 2) 
+            iX = 2;
+        if (iX >= BOARD_WIDTH - 2 * iWidth) 
+            iX = BOARD_WIDTH - 2 * iWidth;
     }
 
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
+    public void keyPressed(KeyEvent kveEvent) {
+        int iKey = kveEvent.getKeyCode();
 
-        if (key == KeyEvent.VK_LEFT)
+        if (iKey == KeyEvent.VK_LEFT)
         {
-            dx = -2;
+            iDx = -2;
         }
 
-        if (key == KeyEvent.VK_RIGHT)
+        if (iKey == KeyEvent.VK_RIGHT)
         {
-            dx = 2;
+            iDx = 2;
         }
     }
 
-    public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
+    public void keyReleased(KeyEvent kveEvent) {
+        int iKey = kveEvent.getKeyCode();
 
-        if (key == KeyEvent.VK_LEFT)
+        if (iKey == KeyEvent.VK_LEFT)
         {
-            dx = 0;
+            iDx = 0;
         }
 
-        if (key == KeyEvent.VK_RIGHT)
+        if (iKey == KeyEvent.VK_RIGHT)
         {
-            dx = 0;
+            iDx = 0;
         }
     }
 }

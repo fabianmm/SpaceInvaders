@@ -4,7 +4,6 @@
   * @author 
   */
 public interface Commons {
-
     public static final int BOARD_WIDTH = 700;
     public static final int BOARD_HEIGTH = 600;
     public static final int GROUND = 500;

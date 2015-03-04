@@ -25,14 +25,14 @@ import javax.swing.JPanel;
  */
 public class Board extends JPanel implements Runnable, Commons { 
 
-    private Dimension d;
-    private ArrayList aliens;
-    private Player player;
-    private Shot shot;
+    private Dimension d;    // Variable Dimensión del Juego
+    private ArrayList aliens;   // Lista de aliens
+    private Player player;  // Variable del Jugador
+    private Shot shot;  // Variable del disparo
 
-    private int alienX = 150;
-    private int alienY = 5;
-    private int direction = -1;
+    private int alienX = 150;   // posición x del alien
+    private int alienY = 5; // posición y del alien
+    private int direction = -1; // 
     private int deaths = 0;
 
     private boolean ingame = true;

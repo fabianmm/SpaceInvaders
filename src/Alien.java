@@ -17,17 +17,17 @@ public class Alien extends Sprite {
     private final String shot = "alien.png";
 
     public Alien(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.iX = x;
+        this.iY = y;
 
         bomb = new Bomb(x, y);
-        ImageIcon ii = new ImageIcon(this.getClass().getResource(shot));
-        setImage(ii.getImage());
+        ImageIcon imiImagen = new ImageIcon(this.getClass().getResource(shot));
+        setImage(imiImagen.getImage());
 
     }
 
     public void act(int direction) {
-        this.x += direction;
+        this.iX += direction;
     }
 
     public Bomb getBomb() {
@@ -41,8 +41,8 @@ public class Alien extends Sprite {
 
         public Bomb(int x, int y) {
             setDestroyed(true);
-            this.x = x;
-            this.y = y;
+            this.iX = x;
+            this.iY = y;
             ImageIcon ii = new ImageIcon(this.getClass().getResource(bomb));
             setImage(ii.getImage());
         }
