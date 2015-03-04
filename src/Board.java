@@ -166,8 +166,9 @@ public class Board extends JPanel implements Runnable, Commons {
             // si el alien se muere
             if (alien.isDying()) {
                 alien.dieAnimacion();
-                alien.getAnimacion().actualiza(lTiempoTranscurrido);
-                graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
+                //alien.getAnimacion().actualiza(lTiempoTranscurrido);
+                graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);  
+                
                 alien.die();
             }
         }
