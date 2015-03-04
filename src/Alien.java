@@ -68,8 +68,8 @@ public class Alien extends Sprite {
                             getResource("explosion2.png"));
         //Se crea la animación de la portada
         aniAlienMuere = new Animacion();
-	aniAlienMuere.sumaCuadro(alien1, 25);
-        aniAlienMuere.sumaCuadro(alien2, 25);
+	aniAlienMuere.sumaCuadro(alien1, 5);
+        aniAlienMuere.sumaCuadro(alien2, 5);
         setAnimacion(aniAlienMuere);
     }
 

@@ -35,7 +35,7 @@ public class Board extends JPanel implements Runnable, Commons {
     private int iAlienY = 5; // posición y del alien
     private int iDirection = -1; // direccion del jugador
     private int iDeaths = 0;    // numero de arlAliens muertos
-    private int iDeathCounter = 13; //contador para dibujar animacion de muerte
+    private int iDeathCounter = 0; //contador para dibujar animacion de muerte
     
     private long lTiempoActual; // tiempo actual
     private long lTiempoInicial;    // tiempo inicial
@@ -144,18 +144,14 @@ public class Board extends JPanel implements Runnable, Commons {
                 graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
             }
 
+
+            
             // si el alien se muere
-            if (alien.isDying() && iDeathCounter > 0) {
+            if (alien.isDying()) {
                 alien.dieAnimacion();
                 alien.getAnimacion().actualiza(lTiempoTranscurrido);
                 graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
-                iDeathCounter--;
-                System.out.println(iDeathCounter);
-                //cuando el contador termine reiniciarlo
-                if (iDeathCounter < 0) {
-                    iDeathCounter = 13;
-                    alien.die();
-                }
+                alien.die();
             }
         }
     }
@@ -309,9 +305,6 @@ public class Board extends JPanel implements Runnable, Commons {
                 // si el disparo colisiona con un alien
                 if (alien.isVisible() && shtShot.isVisible()) {
                     if (shtShot.intersecta(alien)) {
-                            ImageIcon imiImage = 
-                                new ImageIcon(getClass().getResource(sExpl));
-                            alien.setImage(imiImage.getImage());
                             alien.setDying(true);   // destruye el alien
                             iDeaths++;  // aumenta las muertes de aliens
                             shtShot.die();  // destruye el disparo
