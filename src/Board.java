@@ -44,7 +44,12 @@ public class Board extends JPanel implements Runnable, Commons {
     private final String sExpl = "explosion.png";   // url de la imagen explosion
     private final String sAlienpix = "alien.png";   // url de la imagen de alien
     private String sMessage = "Game Over";  // mensage de game over
-
+    
+    // sonidos del juego
+    private SoundClip sndDisparo = new SoundClip("disparoShip.wav");
+    private SoundClip sndBombas = new SoundClip("disparosAlien.wav");
+    private SoundClip sndInicio = new SoundClip("inicioJuego.wav");
+    private SoundClip sndLose = new SoundClip("lose.WAV");
     private Thread animator;    // thread
 
     /**
@@ -62,6 +67,7 @@ public class Board extends JPanel implements Runnable, Commons {
         // establece el color de fondo
         setBackground(Color.black);
         // empieza el juego
+        sndInicio.play();
         gameInit();
         setDoubleBuffered(true);
     }
@@ -338,6 +344,8 @@ public class Board extends JPanel implements Runnable, Commons {
                 Iterator i2 = arlAliens.iterator();
                 // los baja en y
                 while (i2.hasNext()) {
+                   sndBombas.play();
+
                    Alien a = (Alien)i2.next();
                    a.setY(a.getY() + GO_DOWN);
                }
@@ -369,11 +377,14 @@ public class Board extends JPanel implements Runnable, Commons {
         // crea un random
         Random rndGenerator = new Random();
 
+        
         while (i3.hasNext()) {
             int shtShot = rndGenerator.nextInt(15); // numero de bombas
             Alien aliAlien = (Alien) i3.next(); // crea un alien auxiliar
             Alien.Bomb bmbBomba = aliAlien.getBomb(); // crea una bomba
             // crea una bomba 
+            
+            
             if (shtShot == CHANCE && aliAlien.isVisible() && bmbBomba.isDestroyed()) {
                 bmbBomba.setDestroyed(false);
                 bmbBomba.setX(aliAlien.getX());
@@ -477,8 +488,12 @@ public class Board extends JPanel implements Runnable, Commons {
             // si le pica a Alt
             if (kveEvent.isAltDown()) {
                 // crea un disparo
-                if (!shtShot.isVisible())
+                if (!shtShot.isVisible()) {
                     shtShot = new Shot(x, y);
+                    sndDisparo.play();
+                }
+                    
+                
             }
             else if (kveEvent.getKeyCode() == KeyEvent.VK_P) {
                 // pausa el jeugo
