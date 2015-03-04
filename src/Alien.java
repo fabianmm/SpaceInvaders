@@ -40,8 +40,8 @@ public class Alien extends Sprite {
                             getResource("alien2.png"));
         //Se crea la animación de la portada
         aniAlien = new Animacion();
-	aniAlien.sumaCuadro(alien1, 200);
-        aniAlien.sumaCuadro(alien2, 200);
+	aniAlien.sumaCuadro(alien1, 10);
+        aniAlien.sumaCuadro(alien2, 10);
         setAnimacion(aniAlien);
         setImage(imiImagen.getImage());
     }

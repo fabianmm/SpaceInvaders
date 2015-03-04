@@ -35,6 +35,9 @@ public class Board extends JPanel implements Runnable, Commons {
     private int iAlienY = 5; // posición y del alien
     private int iDirection = -1; // direccion del jugador
     private int iDeaths = 0;    // numero de arlAliens muertos
+    
+    private long lTiempoActual; // tiempo actual
+    private long lTiempoInicial;    // tiempo inicial
 
     private boolean bIngame = true; // boleana de si esta jugando o no
     private final String sExpl = "explosion.png";   // url de la imagen explosion
@@ -117,7 +120,12 @@ public class Board extends JPanel implements Runnable, Commons {
       */
     public void drawAliens(Graphics graGrafico) 
     {
-        // crea un iterador de la lista de aliens
+        //Determina el tiempo que ha transcurrido desde que el Applet inicio su ejecución
+        long lTiempoTranscurrido = System.currentTimeMillis() - lTiempoActual;
+            
+        //Guarda el tiempo actual
+       	lTiempoActual += lTiempoTranscurrido;
+         
         Iterator it = arlAliens.iterator();
         
         // mientras existan aliens
@@ -126,6 +134,7 @@ public class Board extends JPanel implements Runnable, Commons {
 
             // si existe el alien
             if (alien.isVisible()) {
+                alien.getAnimacion().actualiza(lTiempoTranscurrido);
                 graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
             }
 
@@ -379,26 +388,26 @@ public class Board extends JPanel implements Runnable, Commons {
     }
 
     public void run() {
+        //Guarda el tiempo actual del sistema
+        lTiempoActual = System.currentTimeMillis();
 
-        long beforeTime, timeDiff, sleep;
-
-        beforeTime = System.currentTimeMillis();
+        long lTimeDiff, lSleep;
 
         while (bIngame) {
             repaint();
             animationCycle();
 
-            timeDiff = System.currentTimeMillis() - beforeTime;
-            sleep = DELAY - timeDiff;
+            lTimeDiff = System.currentTimeMillis() - lTiempoActual;
+            lSleep = DELAY - lTimeDiff;
 
-            if (sleep < 0) 
-                sleep = 2;
+            if (lSleep < 0) 
+                lSleep = 2;
             try {
-                Thread.sleep(sleep);
+                Thread.sleep(lSleep);
             } catch (InterruptedException e) {
                 System.out.println("interrupted");
             }
-            beforeTime = System.currentTimeMillis();
+            lTiempoActual = System.currentTimeMillis();
         }
         gameOver();
     }
