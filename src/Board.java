@@ -40,6 +40,7 @@ public class Board extends JPanel implements Runnable, Commons {
     private long lTiempoInicial;    // tiempo inicial
 
     private boolean bIngame = true; // boleana de si esta jugando o no
+    private boolean bPause = false; // boleana de pausar el juego
     private final String sExpl = "explosion.png";   // url de la imagen explosion
     private final String sAlienpix = "alien.png";   // url de la imagen de alien
     private String sMessage = "Game Over";  // mensage de game over
@@ -234,29 +235,36 @@ public class Board extends JPanel implements Runnable, Commons {
     /**
      * gameOver
      * 
+     * Metodo de cuando termina el juego.
      */
     public void gameOver()
     {
+        // Dibuja el game over
+        Graphics graGrafico = this.getGraphics();
 
-        Graphics g = this.getGraphics();
+        graGrafico.setColor(Color.black);
+        graGrafico.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGTH);
 
-        g.setColor(Color.black);
-        g.fillRect(0, 0, BOARD_WIDTH, BOARD_HEIGTH);
-
-        g.setColor(new Color(0, 32, 48));
-        g.fillRect(50, BOARD_WIDTH/2 - 30, BOARD_WIDTH-100, 50);
-        g.setColor(Color.white);
-        g.drawRect(50, BOARD_WIDTH/2 - 30, BOARD_WIDTH-100, 50);
+        graGrafico.setColor(new Color(0, 32, 48));
+        graGrafico.fillRect(50, BOARD_WIDTH/2 - 30, BOARD_WIDTH-100, 50);
+        graGrafico.setColor(Color.white);
+        graGrafico.drawRect(50, BOARD_WIDTH/2 - 30, BOARD_WIDTH-100, 50);
 
         Font small = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics metr = this.getFontMetrics(small);
 
-        g.setColor(Color.white);
-        g.setFont(small);
-        g.drawString(sMessage, (BOARD_WIDTH - metr.stringWidth(sMessage))/2, 
+        graGrafico.setColor(Color.white);
+        graGrafico.setFont(small);
+        graGrafico.drawString(sMessage, (BOARD_WIDTH - metr.stringWidth(sMessage))/2, 
             BOARD_WIDTH/2);
     }
 
+    /**
+     * animationCycle
+     * 
+     * Metodo que actualiza el juego.
+     * 
+     */
     public void animationCycle()  {
 
         // si destruye todos los arlAliens, gana el juego
@@ -270,132 +278,154 @@ public class Board extends JPanel implements Runnable, Commons {
 
         // checa colision del disparo
         if (shtShot.isVisible()) {
+            // crea un iterador para la lista de aliens
             Iterator it = arlAliens.iterator();
-            int shtShotX = shtShot.getX();
-            int shtShotY = shtShot.getY();
-
+            
+            // mientras haya aliens
             while (it.hasNext()) {
                 Alien alien = (Alien) it.next();
-                int alienX = alien.getX();
-                int alienY = alien.getY();
-
+                
+                // si el disparo colisiona con un alien
                 if (alien.isVisible() && shtShot.isVisible()) {
                     if (shtShot.intersecta(alien)) {
                             ImageIcon imiImage = 
                                 new ImageIcon(getClass().getResource(sExpl));
                             alien.setImage(imiImage.getImage());
-                            alien.setDying(true);
-                            iDeaths++;
-                            shtShot.die();
+                            alien.setDying(true);   // destruye el alien
+                            iDeaths++;  // aumenta las muertes de aliens
+                            shtShot.die();  // destruye el disparo
                         }
                 }
             }
-
+            
             int y = shtShot.getY();
             y -= 4;
-            if (y < 0)
+            // si el disparo se sale de la pantalla lo destruye
+            if (y < 0) {
                 shtShot.die();
-            else shtShot.setY(y);
-        }
-
-        // arlAliens
-
-         Iterator it1 = arlAliens.iterator();
-
-         while (it1.hasNext()) {
-             Alien a1 = (Alien) it1.next();
-             int x = a1.getX();
-
-             if (x  >= BOARD_WIDTH - BORDER_RIGHT && iDirection != -1) {
-                 iDirection = -1;
-                 Iterator i1 = arlAliens.iterator();
-                 while (i1.hasNext()) {
-                     Alien a2 = (Alien) i1.next();
-                     a2.setY(a2.getY() + GO_DOWN);
-                 }
-             }
-
-            if (x <= BORDER_LEFT && iDirection != 1) {
-                iDirection = 1;
-
-                Iterator i2 = arlAliens.iterator();
-                while (i2.hasNext()) {
-                    Alien a = (Alien)i2.next();
-                    a.setY(a.getY() + GO_DOWN);
-                }
+            }
+            else {
+                shtShot.setY(y);
             }
         }
 
+        // actualiza aliens
+        // crea un iterador
+        Iterator it1 = arlAliens.iterator();
 
+        // mientras haya aliens
+        while (it1.hasNext()) {
+            Alien a1 = (Alien) it1.next();
+            int iX = a1.getX(); // la posicion x del alien
+
+            // si colisiona con la derecha de la ventana
+            if (iX  > BOARD_WIDTH - BORDER_RIGHT) {
+                // cambia la direccion
+                iDirection = -1;
+                Iterator i1 = arlAliens.iterator();
+                // los baja en y
+                while (i1.hasNext()) {
+                    Alien a2 = (Alien) i1.next();
+                    a2.setY(a2.getY() + GO_DOWN);
+                }
+            }
+            
+            // si colisiona con la izquierda de la ventana
+            if (iX < BORDER_LEFT) {
+                // cambia la direccion
+                iDirection = 1;
+
+                Iterator i2 = arlAliens.iterator();
+                // los baja en y
+                while (i2.hasNext()) {
+                   Alien a = (Alien)i2.next();
+                   a.setY(a.getY() + GO_DOWN);
+               }
+           }
+        }
+
+        // crea un iterador de la lista
         Iterator it = arlAliens.iterator();
-
+        
         while (it.hasNext()) {
             Alien alien = (Alien) it.next();
             if (alien.isVisible()) {
-
-                int y = alien.getY();
-
-                if (y > GROUND - ALIEN_HEIGHT) {
+                // agarra la posicion y de alien
+                int iY = alien.getY();
+                // si un alien llega a la tierra pierde
+                if (iY > GROUND - ALIEN_HEIGHT) {
                     bIngame = false;
                     sMessage = "Invasion!";
                 }
-
+                // actualiza los aliens
                 alien.act(iDirection);
             }
         }
 
-        // bombs
+        // actualiza las bombas de los aliens
 
+        // crea un iterador de la lista de aliens
         Iterator i3 = arlAliens.iterator();
-        Random generator = new Random();
+        // crea un random
+        Random rndGenerator = new Random();
 
         while (i3.hasNext()) {
-            int shtShot = generator.nextInt(15);
-            Alien a = (Alien) i3.next();
-            Alien.Bomb b = a.getBomb();
-            if (shtShot == CHANCE && a.isVisible() && b.isDestroyed()) {
+            int shtShot = rndGenerator.nextInt(15); // numero de bombas
+            Alien aliAlien = (Alien) i3.next(); // crea un alien auxiliar
+            Alien.Bomb bmbBomba = aliAlien.getBomb(); // crea una bomba
+            // crea una bomba 
+            if (shtShot == CHANCE && aliAlien.isVisible() && bmbBomba.isDestroyed()) {
+                bmbBomba.setDestroyed(false);
+                bmbBomba.setX(aliAlien.getX());
+                bmbBomba.setY(aliAlien.getY());   
+            }  
 
-                b.setDestroyed(false);
-                b.setX(a.getX());
-                b.setY(a.getY());   
-            }
-
-            int bombX = b.getX();
-            int bombY = b.getY();
-            int plyPlayerX = plyPlayer.getX();
-            int plyPlayerY = plyPlayer.getY();
-
-            if (plyPlayer.isVisible() && !b.isDestroyed()) {
-                if ( bombX >= (plyPlayerX) && 
-                    bombX <= (plyPlayerX+PLAYER_WIDTH) &&
-                    bombY >= (plyPlayerY) && 
-                    bombY <= (plyPlayerY+PLAYER_HEIGHT) ) {
-                        ImageIcon ii = 
+            // mientras exita el jugador y la bomba
+            if (plyPlayer.isVisible() && !bmbBomba.isDestroyed()) {
+                // si colisiona la bomba con el jugador
+                if (bmbBomba.intersecta(plyPlayer) ) {
+                        ImageIcon imiImagen = 
                             new ImageIcon(this.getClass().getResource(sExpl));
-                        plyPlayer.setImage(ii.getImage());
-                        plyPlayer.setDying(true);
-                        b.setDestroyed(true);;
+                        plyPlayer.setImage(imiImagen.getImage());
+                        plyPlayer.setDying(true);   // destruye el jugador
+                        bmbBomba.setDestroyed(true);    // destruye la bomba
                     }
             }
-
-            if (!b.isDestroyed()) {
-                b.setY(b.getY() + 1);   
-                if (b.getY() >= GROUND - BOMB_HEIGHT) {
-                    b.setDestroyed(true);
+            
+            // mientras exista la bomba
+            if (!bmbBomba.isDestroyed()) {
+                // la actualiza hacia abajo
+                bmbBomba.setY(bmbBomba.getY() + 1);   
+                // si llega a la tierra
+                if (bmbBomba.getY() >= GROUND - BOMB_HEIGHT) {
+                    bmbBomba.setDestroyed(true);    // destruye la bomba
                 }
             }
         }
     }
 
+    
+    /**
+     * run
+     * 
+     * Metodo que corre el juego y actualiza el hilo.
+     * 
+     */
     public void run() {
         //Guarda el tiempo actual del sistema
         lTiempoActual = System.currentTimeMillis();
 
         long lTimeDiff, lSleep;
 
+        // mientras no pierda
         while (bIngame) {
+            // pinta y actualiza
             repaint();
-            animationCycle();
+            
+            if (!bPause) { // checa si no esta pausado el juego
+                animationCycle();
+            }
+            
 
             lTimeDiff = System.currentTimeMillis() - lTiempoActual;
             lSleep = DELAY - lTimeDiff;
@@ -412,24 +442,47 @@ public class Board extends JPanel implements Runnable, Commons {
         gameOver();
     }
 
+    
     private class TAdapter extends KeyAdapter {
 
-        public void keyReleased(KeyEvent e) {
-            plyPlayer.keyReleased(e);
+        /**
+          * keyReleased
+          * 
+          * Metodo <I>keyReleased</I> sobrescrito de la interface <code>KeyListener</code>.<P>
+          * En este metodo maneja el evento que se genera al soltar cualquier la tecla.
+          * 
+          * @param kveEvent es el <code>evento</code> generado al soltar las teclas.
+          */
+        public void keyReleased(KeyEvent kveEvent) {
+            plyPlayer.keyReleased(kveEvent); // manda el evento a player
         }
 
-        public void keyPressed(KeyEvent e) {
-
-          plyPlayer.keyPressed(e);
+        /**
+          * keyPressed
+          * 
+          * Metodo <I>keyPressed</I> sobrescrito de la interface <code>KeyListener</code>.<P>
+          * En este metodo maneja el evento que se genera al presionar cualquier la tecla.
+          * 
+          * @param kveEvent es el <code>evento</code> generado al presionar las teclas.
+          */
+        public void keyPressed(KeyEvent kveEvent) {
+          // manda el evento a player
+          plyPlayer.keyPressed(kveEvent);
 
           int x = plyPlayer.getX();
           int y = plyPlayer.getY();
 
-          if (bIngame)
-          {
-            if (e.isAltDown()) {
+          // si esta en el juego
+          if (bIngame) {
+            // si le pica a Alt
+            if (kveEvent.isAltDown()) {
+                // crea un disparo
                 if (!shtShot.isVisible())
                     shtShot = new Shot(x, y);
+            }
+            else if (kveEvent.getKeyCode() == KeyEvent.VK_P) {
+                // pausa el jeugo
+                bPause = !bPause;
             }
           }
         }
