@@ -1,16 +1,19 @@
 
 import java.awt.Image;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.awt.Rectangle;
+import javax.swing.ImageIcon;
 
 /**
+ * Sprite
  *
- * @author http://zetcode.com/
+ * Modela la definición de todos los objetos de tipo
+ * <code>Sprite</code>
+ *
+ * @author Fabián Montemayor A01280156 & Mauro Amarante A01191903
+ * @version 2.0 
+ * @date 4/03/15
  */
+
 public class Sprite {
 
         private boolean bVisible;   // boleana de visibilidad del sprite
@@ -112,24 +115,74 @@ public class Sprite {
         /**
           * getY
           * 
-          * Metodo de acceso que regresa la .
-          * 
-          * @param iY es la posicion y del sprite.
+          * Metodo de acceso que regresa la posición y del sprite.
           * 
           */
         public int getY() {
             return iY;
         }
-
+        /**
+          * getX
+          * 
+          * Metodo de acceso que regresa la posición x del sprite.
+          * 
+          */
         public int getX() {
             return iX;
         }
 
+        /**
+          * setDying
+          * 
+          * Metodo modificador usado para cambiar el estado de la boleana bDying.
+          * 
+          * @param bDying es la boleana para actualizar bDying.
+          * 
+          */
         public void setDying(boolean bDying) {
             this.bDying = bDying;
         }
 
+        /**
+          * isDying
+          * 
+          * Metodo de acceso que regresa el estado de la boleana bDying.
+          * 
+          */
         public boolean isDying() {
             return this.bDying;
+        }
+        
+        /**
+          * intersecta
+          *
+          * Metodo que checa si una base intersecta a otro.
+          *
+          * @param objObjeto es un objeto de la clase <code>Object</code>
+          * @return un boleano para saber si intersecta o no
+          */
+        public boolean intersecta(Object objObjeto) {
+            if (objObjeto instanceof Sprite) {
+                // castea el objeto a Sprite
+                Sprite sprObjeto = (Sprite) objObjeto;
+                
+                // crea un image icon de cada objeto
+                ImageIcon imiEsteObjeto = new ImageIcon(imgImage);
+                ImageIcon imiOtroObjeto = new ImageIcon(sprObjeto.getImage());
+                
+                // crea un objeto rectangulo de cada objeto
+                Rectangle rctEsteObjeto = new Rectangle(this.getX(), this.getY(),
+                        imiEsteObjeto.getIconWidth(), 
+                        imiEsteObjeto.getIconHeight());
+                Rectangle rctObjetoParam = new Rectangle(sprObjeto.getX(), 
+                        sprObjeto.getY(), imiOtroObjeto.getIconWidth(), 
+                        imiOtroObjeto.getIconHeight());
+                
+                // regresa la intereccion entre ellos
+                return rctEsteObjeto.intersects(rctObjetoParam);
+            } 
+            else {
+                return false;
+            }
         }
 }
