@@ -73,99 +73,159 @@ public class Board extends JPanel implements Runnable, Commons {
         gameInit();
     }
 
+    /**
+      * gameInit
+      * 
+      * Metodo que inicializa las variables.
+      * 
+      */
     public void gameInit() {
 
-        arlAliens = new ArrayList();
+        arlAliens = new ArrayList();    // crea una nueva array list de aliens
 
-        ImageIcon ii = new ImageIcon(this.getClass().getResource(sAlienpix));
+        // agrega la imagen del alien
+        ImageIcon imiImagen = new ImageIcon(this.getClass().getResource(sAlienpix));
 
-        for (int i=0; i < 4; i++) {
-            for (int j=0; j < 6; j++) {
-                Alien alien = new Alien(iAlienX + 18*j, iAlienY + 18*i);
-                alien.setImage(ii.getImage());
+        // crea cada alien (24)
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 6; j++) {
+                Alien alien = new Alien(iAlienX + 18 * j, iAlienY + 18 * i);
+                alien.setImage(imiImagen.getImage());
                 arlAliens.add(alien);
             }
         }
 
+        // crea el objeto Player
         plyPlayer = new Player();
+        
+        // crea el objeto Shot
         shtShot = new Shot();
 
+        // inicializa el thread
         if (animator == null || !bIngame) {
             animator = new Thread(this);
             animator.start();
         }
     }
 
-    public void drawAliens(Graphics g) 
+    /**
+      * drawAliens
+      * 
+      * Metodo que dibuja los aliens.
+      * 
+      * @param graGrafico es el <code>objeto grafico</code> usado para dibujar.
+      */
+    public void drawAliens(Graphics graGrafico) 
     {
+        // crea un iterador de la lista de aliens
         Iterator it = arlAliens.iterator();
-
+        
+        // mientras existan aliens
         while (it.hasNext()) {
             Alien alien = (Alien) it.next();
 
+            // si existe el alien
             if (alien.isVisible()) {
-                g.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
+                graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
             }
 
+            // si el alien se muere
             if (alien.isDying()) {
                 alien.die();
             }
         }
     }
 
-    public void drawPlayer(Graphics g) {
-
+    /**
+      * drawPlayer
+      * 
+      * Metodo que dibuja el jugador.
+      * 
+      * @param graGrafico es el <code>objeto grafico</code> usado para dibujar.
+      */
+    public void drawPlayer(Graphics graGrafico) {
+        // mientras exista
         if (plyPlayer.isVisible()) {
-            g.drawImage(plyPlayer.getImage(), plyPlayer.getX(), plyPlayer.getY(), this);
+            graGrafico.drawImage(plyPlayer.getImage(), plyPlayer.getX(), plyPlayer.getY(), this);
         }
 
+        // si el juegador se muere termina el juego
         if (plyPlayer.isDying()) {
             plyPlayer.die();
             bIngame = false;
         }
     }
 
-    public void drawShot(Graphics g) {
+    /**
+      * drawShot
+      * 
+      * Metodo que dibuja el shot.
+      * 
+      * @param graGrafico es el <code>objeto grafico</code> usado para dibujar.
+      */
+    public void drawShot(Graphics graGrafico) {
+        // mientras exista
         if (shtShot.isVisible())
-            g.drawImage(shtShot.getImage(), shtShot.getX(), shtShot.getY(), this);
+            graGrafico.drawImage(shtShot.getImage(), shtShot.getX(), shtShot.getY(), this);
     }
 
-    public void drawBombing(Graphics g) {
-
+    /**
+      * drawBombing
+      * 
+      * Metodo que dibuja las bombas.
+      * 
+      * @param graGrafico es el <code>objeto grafico</code> usado para dibujar.
+      */
+    public void drawBombing(Graphics graGrafico) {
+        // crea un iterador
         Iterator i3 = arlAliens.iterator();
 
+        // mientras haya bombas
         while (i3.hasNext()) {
             Alien a = (Alien) i3.next();
 
             Alien.Bomb b = a.getBomb();
 
             if (!b.isDestroyed()) {
-                g.drawImage(b.getImage(), b.getX(), b.getY(), this); 
+                graGrafico.drawImage(b.getImage(), b.getX(), b.getY(), this); 
             }
         }
     }
 
-    public void paint(Graphics g)
+    /**
+      * Metodo <I>paint</I> sobrescrito de la clase <code>JPanel</code>,
+      * heredado de la clase Container.<P>
+      * En este metodo se dibuja la imagen con la posicion actualizada,
+      * ademas que cuando la imagen es cargada te despliega una advertencia.
+      * @param graGrafico es el <code>objeto grafico</code> usado para dibujar.
+      */
+    public void paint(Graphics graGrafico)
     {
-      super.paint(g);
-
-      g.setColor(Color.black);
-      g.fillRect(0, 0, dimD.width, dimD.height);
-      g.setColor(Color.green);   
-
+      super.paint(graGrafico);
+      // dibuja el fondo
+      graGrafico.setColor(Color.black);
+      graGrafico.fillRect(0, 0, dimD.width, dimD.height);
+      graGrafico.setColor(Color.green);   
+      
+      // si esta en el juego
       if (bIngame) {
-
-        g.drawLine(0, GROUND, BOARD_WIDTH, GROUND);
-        drawAliens(g);
-        drawPlayer(g);
-        drawShot(g);
-        drawBombing(g);
+        // dibuja la linea de ground
+        graGrafico.drawLine(0, GROUND, BOARD_WIDTH, GROUND);
+        // dibuja cada sprite
+        drawAliens(graGrafico);
+        drawPlayer(graGrafico);
+        drawShot(graGrafico);
+        drawBombing(graGrafico);
       }
 
       Toolkit.getDefaultToolkit().sync();
-      g.dispose();
+      graGrafico.dispose();
     }
 
+    /**
+     * gameOver
+     * 
+     */
     public void gameOver()
     {
 
