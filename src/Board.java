@@ -7,6 +7,13 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -55,6 +62,10 @@ public class Board extends JPanel implements Runnable, Commons {
     private SoundClip sndAlien = new SoundClip("muerteAlien.wav");
     private SoundClip sndMuerte = new SoundClip("muerteShip.wav");
     private SoundClip sndWin = new SoundClip("win.wav");
+    
+    private String sNombreArchivo = "juego.txt";    //Nombre del archivo.
+    private String[] sArr;    //Arreglo del archivo divido.
+    
     private Thread animator;    // thread
 
     /**
@@ -468,6 +479,46 @@ public class Board extends JPanel implements Runnable, Commons {
             lTiempoActual = System.currentTimeMillis();
         }
         gameOver();
+    }
+    
+    /**
+     * 
+     * leeArchivo
+     * 
+     * Metodo que lee a informacion de un archivo.
+     *
+     * @throws IOException
+     */
+    private void leeArchivo() throws IOException{
+        BufferedReader fileIn;
+    	try {
+    		fileIn = new BufferedReader(new FileReader(sNombreArchivo));
+    	} catch (FileNotFoundException e){
+    		File puntos = new File(sNombreArchivo);
+    		PrintWriter fileOut = new PrintWriter(puntos);
+    		fileOut.println("100,demo");
+    		fileOut.close();
+    		fileIn = new BufferedReader(new FileReader(sNombreArchivo));
+    	}
+        
+    	String sDato = fileIn.readLine();
+
+        
+    
+    	fileIn.close();
+    }
+    /**
+     * 
+     * grabaArchivo 
+     * 
+     * Metodo graba información en un archivo.
+     *
+     * @throws IOException
+     */
+    private void grabaArchivo() throws IOException {
+        PrintWriter fileOut = new PrintWriter(new FileWriter(sNombreArchivo));
+        
+    	fileOut.close();	        
     }
 
     
