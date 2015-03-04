@@ -26,7 +26,8 @@ public class Shot extends Sprite {
       * 
       */
     public Shot() {
-        // no contiene código
+        ImageIcon imiImagen = new ImageIcon(this.getClass().getResource(sShot));
+        setImage(imiImagen.getImage()); // actualiza la imagen del shot
     }
 
     /**
