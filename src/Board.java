@@ -44,7 +44,7 @@ public class Board extends JPanel implements Runnable, Commons {
     private int iAlienY = 5; // posición y del alien
     private int iDirection = -1; // direccion del jugador
     private int iDeaths = 0;    // numero de arlAliens muertos
-    private int iDeathCounter = 0; //contador para dibujar animacion de muerte
+    private int iDeathCounter = 20; //contador para dibujar animacion de muerte
     
     private long lTiempoActual; // tiempo actual
     private long lTiempoInicial;    // tiempo inicial
@@ -166,11 +166,24 @@ public class Board extends JPanel implements Runnable, Commons {
             // si el alien se muere
             if (alien.isDying()) {
                 alien.dieAnimacion();
-                //alien.getAnimacion().actualiza(lTiempoTranscurrido);
-                graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);  
-                
-                alien.die();
+                alien.setAnimar(true);
             }
+            
+            //si se debe animar y aun es visible
+            if (alien.isAnimar() && alien.isVisible()) {
+                //dibujar mientras este el contador
+                if (iDeathCounter > 0) {
+                    iDeathCounter--;
+                    alien.getAnimacion().actualiza(lTiempoTranscurrido);
+                    graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
+                }
+                else {
+                    alien.die();
+                    iDeathCounter = 20;
+                    alien.setAnimar(false);
+                }
+            }
+            
         }
     }
 
@@ -225,7 +238,8 @@ public class Board extends JPanel implements Runnable, Commons {
             Alien.Bomb b = a.getBomb();
 
             if (!b.isDestroyed()) {
-                graGrafico.drawImage(b.getImage(), b.getX(), b.getY(), this); 
+                b.getAnimacion().actualiza(lTiempoTranscurrido);
+                graGrafico.drawImage(b.getAnimacion().getImagen(), b.getX(), b.getY(), this); 
             }
         }
     }

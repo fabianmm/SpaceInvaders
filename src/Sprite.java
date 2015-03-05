@@ -23,6 +23,7 @@ public class Sprite extends Animacion{
         protected int iY;   // posicion y del sprite
         protected boolean bDying;   // boleana de muerte del sprite
         protected int iDx;  // entero de la dirección del sprite
+        private boolean bAnimar;    // boleana de si se anima o no
 
         /**
           * Sprite
@@ -32,6 +33,7 @@ public class Sprite extends Animacion{
           */
         public Sprite() {
             bVisible = true;    // inicializa bVisible en true
+            this.bAnimar = false;
         }
 
         /**
@@ -65,6 +67,30 @@ public class Sprite extends Animacion{
           */
         protected void setVisible(boolean bVisible) {
             this.bVisible = bVisible;
+        }
+        
+        /**
+        * setAnimar
+        * 
+        * Metodo modificador usado para cambiar la boleana de animacion
+        * 
+        * @param bAnimar es la <code>boleana de animacion</code> del objeto.
+        * 
+        */
+        public void setAnimar(boolean bAnimar) {
+           this.bAnimar = bAnimar;
+        }
+
+        /**
+         * getX
+         * 
+         * Metodo de acceso que regresa la boleana de animacion
+         * 
+         * @return bAnimar es la <code>boleana de animacion</code> del objeto.
+         * 
+         */
+        public boolean isAnimar() {
+                return bAnimar;
         }
 
         /**

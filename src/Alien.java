@@ -39,8 +39,8 @@ public class Alien extends Sprite {
                             getResource("alien2.png"));
         //Se crea la animación de la portada
         aniAlien = new Animacion();
-	aniAlien.sumaCuadro(alien1, 25);
-        aniAlien.sumaCuadro(alien2, 25);
+	aniAlien.sumaCuadro(alien1, 20);
+        aniAlien.sumaCuadro(alien2, 20);
         setAnimacion(aniAlien);
     }
 
@@ -94,8 +94,9 @@ public class Alien extends Sprite {
       */
     public class Bomb extends Sprite {
 
-        private final String sBomb = "bomb.png";    // string del url de la imagen
         private boolean bDestroyed; // boleana de si la bomba está destruida o no
+        private Animacion aniBomb;   // Animacion para el alien
+        private final String bomb = "bomb.png";
 
         /**
           * Bomb
@@ -110,8 +111,18 @@ public class Alien extends Sprite {
             setDestroyed(true);
             this.iX = iX;
             this.iY = iY;
-            ImageIcon imiImagen = new ImageIcon(this.getClass().getResource(sBomb));
-            setImage(imiImagen.getImage());
+            ImageIcon ii = new ImageIcon(this.getClass().getResource(bomb));
+            setImage(ii.getImage());
+            //Se cargan las imágenes(cuadros) para la animación de la portada
+            Image bomb1 = Toolkit.getDefaultToolkit().getImage(this.getClass().
+                                getResource("bomb.png"));
+            Image bomb2 = Toolkit.getDefaultToolkit().getImage(this.getClass().
+                                getResource("bomb2.png"));
+            //Se crea la animación de la portada
+            aniBomb = new Animacion();
+            aniBomb.sumaCuadro(bomb1, 5);
+            aniBomb.sumaCuadro(bomb2, 5);
+            setAnimacion(aniBomb);
         }
 
         /**
