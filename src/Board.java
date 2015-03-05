@@ -45,6 +45,7 @@ public class Board extends JPanel implements Runnable, Commons {
     private int iDirection = -1; // direccion del jugador
     private int iDeaths = 0;    // numero de arlAliens muertos
     private int iDeathCounter = 20; //contador para dibujar animacion de muerte
+    private int iCounterBombs = 24;  //contador del numero de bombas
     
     private long lTiempoActual; // tiempo actual
     private long lTiempoInicial;    // tiempo inicial
@@ -54,6 +55,7 @@ public class Board extends JPanel implements Runnable, Commons {
     private boolean bPause = false; // boleana de pausar el juego
     private boolean bInstr = false; // boleana de instrucciones
     private boolean bCred = false;
+    private boolean bSonido = true;
     
     private final String sExpl = "explosion.png";   // url de la imagen explosion
     private final String sAlienpix = "alien.png";   // url de la imagen de alien
@@ -397,8 +399,6 @@ public class Board extends JPanel implements Runnable, Commons {
                 Iterator i2 = arlAliens.iterator();
                 // los baja en y
                 while (i2.hasNext()) {
-                   sndBombas.play();
-
                    Alien a = (Alien)i2.next();
                    a.setY(a.getY() + GO_DOWN);
                }
@@ -429,7 +429,6 @@ public class Board extends JPanel implements Runnable, Commons {
         Iterator i3 = arlAliens.iterator();
         // crea un random
         Random rndGenerator = new Random();
-
         
         while (i3.hasNext()) {
             int shtShot = rndGenerator.nextInt(15); // numero de bombas
@@ -441,7 +440,12 @@ public class Board extends JPanel implements Runnable, Commons {
             if (shtShot == CHANCE && aliAlien.isVisible() && bmbBomba.isDestroyed()) {
                 bmbBomba.setDestroyed(false);
                 bmbBomba.setX(aliAlien.getX());
-                bmbBomba.setY(aliAlien.getY());   
+                bmbBomba.setY(aliAlien.getY()); 
+                if (bSonido && iCounterBombs >= 5) {
+                    sndBombas.play();
+                    bSonido = false;
+                    iCounterBombs = 0;
+                }
             }  
 
             // mientras exita el jugador y la bomba
@@ -464,6 +468,8 @@ public class Board extends JPanel implements Runnable, Commons {
                 // si llega a la tierra
                 if (bmbBomba.getY() >= GROUND - BOMB_HEIGHT) {
                     bmbBomba.setDestroyed(true);    // destruye la bomba
+                    bSonido = true;
+                    iCounterBombs++;
                 }
             }
         }
