@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -54,8 +56,9 @@ public class Board extends JPanel implements Runnable, Commons {
     private boolean bIngame = true; // boleana de si esta jugando o no
     private boolean bPause = false; // boleana de pausar el juego
     private boolean bInstr = false; // boleana de instrucciones
-    private boolean bCred = false;
-    private boolean bSonido = true;
+    private boolean bCred = false;  // boleana de creditos
+    private boolean bSonido = true; // boleana de sonido
+    private boolean bLose = false;  // boleana de perdida
     
     private final String sExpl = "explosion.png";   // url de la imagen explosion
     private final String sAlienpix = "alien.png";   // url de la imagen de alien
@@ -287,8 +290,13 @@ public class Board extends JPanel implements Runnable, Commons {
         }
         
       }
-      else {
+      else if (bLose) { // si perdio
         URL urlGameOver = this.getClass().getResource("gameOver.png");
+        Image imaGameOver = Toolkit.getDefaultToolkit().getImage(urlGameOver);
+        graGrafico.drawImage(imaGameOver, 0, 0 , this);
+      }
+      else {    // si gano
+        URL urlGameOver = this.getClass().getResource("gameWon.png");
         Image imaGameOver = Toolkit.getDefaultToolkit().getImage(urlGameOver);
         graGrafico.drawImage(imaGameOver, 0, 0 , this);
       }
@@ -304,13 +312,23 @@ public class Board extends JPanel implements Runnable, Commons {
      */
     public void gameOver()
     {
-        sndLose.play();
+
         // Dibuja el game over
         Graphics graGrafico = this.getGraphics();
+        if (bLose) {    // si perdio
+            sndLose.play();
+            URL urlGameOver = this.getClass().getResource("gameOver.png");
+            Image imaGameOver = Toolkit.getDefaultToolkit().getImage(urlGameOver);
+            graGrafico.drawImage(imaGameOver, 0, 0 , this);
+        }
+        else {  // si gano
+            URL urlGameOver = this.getClass().getResource("gameWon.png");
+            Image imaGameOver = Toolkit.getDefaultToolkit().getImage(urlGameOver);
+            graGrafico.drawImage(imaGameOver, 0, 0 , this);
+        }
+        
 
-        URL urlGameOver = this.getClass().getResource("gameOver.png");
-        Image imaGameOver = Toolkit.getDefaultToolkit().getImage(urlGameOver);
-        graGrafico.drawImage(imaGameOver, 0, 0 , this);
+        
         
     }
 
@@ -330,8 +348,8 @@ public class Board extends JPanel implements Runnable, Commons {
         // si destruye todos los arlAliens, gana el juego
         if (iDeaths == NUMBER_OF_ALIENS_TO_DESTROY) {
             bIngame = false;
+            bLose = false;
             sndWin.play();
-            sMessage = "Game won!";
         }
 
         // actualiza el jugador
@@ -454,6 +472,7 @@ public class Board extends JPanel implements Runnable, Commons {
                             new ImageIcon(this.getClass().getResource(sExpl));
                         plyPlayer.setImage(imiImagen.getImage());
                         plyPlayer.setDying(true);   // destruye el jugador
+                        bLose = true;   // pierde
                         sndMuerte.play();
                         bmbBomba.setDestroyed(true);    // destruye la bomba
                     }
@@ -659,21 +678,35 @@ public class Board extends JPanel implements Runnable, Commons {
                     
                 
             }
-            else if (kveEvent.getKeyCode() == KeyEvent.VK_P) {
+            else if (kveEvent.getKeyCode() == KeyEvent.VK_P) {  // pausa
                 // pausa el jeugo
                 bPause = !bPause;
             }
-            else if (kveEvent.getKeyCode() == KeyEvent.VK_I) {
+            else if (kveEvent.getKeyCode() == KeyEvent.VK_I) {  // instrucciones
                 bInstr = !bInstr;
                 if (bCred) {
                     bCred = false;
                 }
                 sndInstr.play();
             }
-            else if (kveEvent.getKeyCode() == KeyEvent.VK_R) {
+            else if (kveEvent.getKeyCode() == KeyEvent.VK_R) {  // creditos
                 bCred = !bCred;
                 if (bInstr) {
                     bInstr = false;
+                }
+            }
+            else if (kveEvent.getKeyCode() == KeyEvent.VK_G) { // guarda archivo
+                try {
+                    grabaArchivo();
+                } catch (IOException ex) {
+                    Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else if (kveEvent.getKeyCode() == KeyEvent.VK_C) {  // carga archivo
+                try {
+                    leeArchivo();
+                } catch (IOException ex) {
+                    Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
           }
