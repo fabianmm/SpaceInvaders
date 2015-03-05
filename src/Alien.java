@@ -55,6 +55,25 @@ public class Alien extends Sprite {
     }
     
     /**
+     * vivoAnimacion
+     * 
+     * Metodo de actualización la animacion al estar vivo
+     * 
+     */
+    public void vivoAnimacion() {
+        //Se cargan las imágenes(cuadros) para la animación de la portada
+        Image alien1 = Toolkit.getDefaultToolkit().getImage(this.getClass().
+                            getResource("alien.png"));
+        Image alien2 = Toolkit.getDefaultToolkit().getImage(this.getClass().
+                            getResource("alien2.png"));
+        //Se crea la animación de la portada
+        aniAlien = new Animacion();
+	aniAlien.sumaCuadro(alien1, 20);
+        aniAlien.sumaCuadro(alien2, 20);
+        setAnimacion(aniAlien);
+    }
+    
+    /**
      * dieAnimacion
      * 
      * Metodo de actualización la animacion al morir

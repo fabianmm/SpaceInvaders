@@ -163,7 +163,8 @@ public class Board extends JPanel implements Runnable, Commons {
             // si existe el alien
             if (alien.isVisible()) {
                 alien.getAnimacion().actualiza(lTiempoTranscurrido);
-                graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
+                graGrafico.drawImage(alien.getAnimacion().getImagen(), 
+                                            alien.getX(), alien.getY(), this);
             }
 
             // si el alien se muere
@@ -178,7 +179,8 @@ public class Board extends JPanel implements Runnable, Commons {
                 if (iDeathCounter > 0) {
                     iDeathCounter--;
                     alien.getAnimacion().actualiza(lTiempoTranscurrido);
-                    graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
+                    graGrafico.drawImage(alien.getAnimacion().getImagen(), 
+                                            alien.getX(), alien.getY(), this);
                 }
                 else {
                     alien.die();
@@ -200,7 +202,8 @@ public class Board extends JPanel implements Runnable, Commons {
     public void drawPlayer(Graphics graGrafico) {
         // mientras exista
         if (plyPlayer.isVisible()) {
-            graGrafico.drawImage(plyPlayer.getImage(), plyPlayer.getX(), plyPlayer.getY(), this);
+            graGrafico.drawImage(plyPlayer.getImage(), plyPlayer.getX(), 
+                                                plyPlayer.getY(), this);
         }
 
         // si el juegador se muere termina el juego
@@ -220,7 +223,8 @@ public class Board extends JPanel implements Runnable, Commons {
     public void drawShot(Graphics graGrafico) {
         // mientras exista
         if (shtShot.isVisible())
-            graGrafico.drawImage(shtShot.getImage(), shtShot.getX(), shtShot.getY(), this);
+            graGrafico.drawImage(shtShot.getImage(), shtShot.getX(), 
+                                                    shtShot.getY(), this);
     }
 
     /**
@@ -242,7 +246,8 @@ public class Board extends JPanel implements Runnable, Commons {
 
             if (!b.isDestroyed()) {
                 b.getAnimacion().actualiza(lTiempoTranscurrido);
-                graGrafico.drawImage(b.getAnimacion().getImagen(), b.getX(), b.getY(), this); 
+                graGrafico.drawImage(b.getAnimacion().getImagen(), b.getX(), 
+                                                            b.getY(), this); 
             }
         }
     }
@@ -286,6 +291,10 @@ public class Board extends JPanel implements Runnable, Commons {
             drawPlayer(graGrafico);
             drawShot(graGrafico);
             drawBombing(graGrafico);
+            String sText = "Presiona 'I' para ver las instrucciones      "
+                    + "Presiona 'R' para ver los creditos     "
+                    + "Presiona 'P' para pausar el juego";
+            graGrafico.drawString(sText, 2, 570);
             
         }
         
@@ -563,17 +572,32 @@ public class Board extends JPanel implements Runnable, Commons {
         shtShot.setX((Integer.parseInt(sDato)));
         sDato = fileIn.readLine();
         shtShot.setY((Integer.parseInt(sDato)));
+        sDato = fileIn.readLine();
+        shtShot.setVisible((Boolean.parseBoolean(sDato)));
         
         //posicion aliens y bombas
         Iterator itAliens = arlAliens.iterator();
         while (itAliens.hasNext()) {
             Alien alien = (Alien) itAliens.next();
-
+            //posicion
             sDato = fileIn.readLine();
             alien.setX((Integer.parseInt(sDato)));
             sDato = fileIn.readLine();
             alien.setY((Integer.parseInt(sDato)));
-            
+            //direccion aliens
+            sDato = fileIn.readLine();
+            iDirection = (Integer.parseInt(sDato));
+            //variables de aint para los aliens
+            sDato = fileIn.readLine();
+            alien.setVisible((Boolean.parseBoolean(sDato)));
+            sDato = fileIn.readLine();
+            alien.setDying((Boolean.parseBoolean(sDato)));
+            if ((Boolean.parseBoolean(sDato)) == false) {
+                alien.vivoAnimacion();
+            }
+            sDato = fileIn.readLine();
+            alien.setAnimar((Boolean.parseBoolean(sDato)));
+            //bombas
             Alien.Bomb b = alien.getBomb();
 
             sDato = fileIn.readLine();
@@ -612,6 +636,7 @@ public class Board extends JPanel implements Runnable, Commons {
         //posicion del disparo de la nave
         fileOut.println(shtShot.getX());
         fileOut.println(shtShot.getY());
+        fileOut.println(shtShot.isVisible());
         
         //posicion aliens y bombas
         Iterator itAliens = arlAliens.iterator();
@@ -620,6 +645,12 @@ public class Board extends JPanel implements Runnable, Commons {
 
             fileOut.println(alien.getX());
             fileOut.println(alien.getY());
+            
+            fileOut.println(iDirection);
+            
+            fileOut.println(alien.isVisible());
+            fileOut.println(alien.isDying());
+            fileOut.println(alien.isAnimar());
             
             Alien.Bomb b = alien.getBomb();
 
@@ -671,7 +702,7 @@ public class Board extends JPanel implements Runnable, Commons {
             // si le pica a Alt
             if (kveEvent.isAltDown()) {
                 // crea un disparo
-                if (!shtShot.isVisible()) {
+                if (!shtShot.isVisible() && !bPause) {
                     shtShot = new Shot(x, y);
                     sndDisparo.play();
                 }
