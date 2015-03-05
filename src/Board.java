@@ -163,8 +163,6 @@ public class Board extends JPanel implements Runnable, Commons {
                 graGrafico.drawImage(alien.getAnimacion().getImagen(), alien.getX(), alien.getY(), this);
             }
 
-
-            
             // si el alien se muere
             if (alien.isDying()) {
                 alien.dieAnimacion();
@@ -533,10 +531,48 @@ public class Board extends JPanel implements Runnable, Commons {
     		fileIn = new BufferedReader(new FileReader(sNombreArchivo));
     	}
         
-    	String sDato = fileIn.readLine();
+    	String sDato;
 
+        //posicion nave
+        sDato = fileIn.readLine();
+        plyPlayer.setX((Integer.parseInt(sDato)));
+        sDato = fileIn.readLine();
+        plyPlayer.setY((Integer.parseInt(sDato)));
         
-    
+        //posicion disparo de la nave
+        sDato = fileIn.readLine();
+        shtShot.setX((Integer.parseInt(sDato)));
+        sDato = fileIn.readLine();
+        shtShot.setY((Integer.parseInt(sDato)));
+        
+        //posicion aliens y bombas
+        Iterator itAliens = arlAliens.iterator();
+        while (itAliens.hasNext()) {
+            Alien alien = (Alien) itAliens.next();
+
+            sDato = fileIn.readLine();
+            alien.setX((Integer.parseInt(sDato)));
+            sDato = fileIn.readLine();
+            alien.setY((Integer.parseInt(sDato)));
+            
+            Alien.Bomb b = alien.getBomb();
+
+            sDato = fileIn.readLine();
+            b.setX((Integer.parseInt(sDato)));
+            sDato = fileIn.readLine();
+            b.setY((Integer.parseInt(sDato)));
+        }
+        
+        //pausa
+        sDato = fileIn.readLine();
+        bPause = ((Boolean.parseBoolean(sDato)));
+        //instrucciones
+        sDato = fileIn.readLine();
+        bInstr = ((Boolean.parseBoolean(sDato)));
+        //creditos
+        sDato = fileIn.readLine();
+        bCred = ((Boolean.parseBoolean(sDato)));
+
     	fileIn.close();
     }
     /**
@@ -550,6 +586,34 @@ public class Board extends JPanel implements Runnable, Commons {
     private void grabaArchivo() throws IOException {
         PrintWriter fileOut = new PrintWriter(new FileWriter(sNombreArchivo));
         
+        //posicion de la nave
+        fileOut.println(plyPlayer.getX());
+        fileOut.println(plyPlayer.getY());
+        
+        //posicion del disparo de la nave
+        fileOut.println(shtShot.getX());
+        fileOut.println(shtShot.getY());
+        
+        //posicion aliens y bombas
+        Iterator itAliens = arlAliens.iterator();
+        while (itAliens.hasNext()) {
+            Alien alien = (Alien) itAliens.next();
+
+            fileOut.println(alien.getX());
+            fileOut.println(alien.getY());
+            
+            Alien.Bomb b = alien.getBomb();
+
+            fileOut.println(b.getX());
+            fileOut.println(b.getY());
+        }
+        
+        //pausa
+        fileOut.println(bPause);
+        //instrucciones
+        fileOut.println(bInstr);
+        //creditos
+        fileOut.println(bCred);
     	fileOut.close();	        
     }
 
